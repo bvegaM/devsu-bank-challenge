@@ -1,0 +1,263 @@
+openapi: 3.0.3
+info:
+  title: Swagger Client - OpenAPI 3.0
+  description: |-
+    <div style="text-align: justify;">
+      <h3>Client and Person Management</h3>
+    
+      <img src="https://workablehr.s3.amazonaws.com/uploads/account/logo/518042/logo" alt="Image" align="right" width="400"/>
+    
+      <p>This is a contract to manage client data based on the OpenAPI 3.0 specification.This is a contract that uses the API First-Contract principle to standardize the creation of endpoints to be used in our service and improve the development of our APIs.</p> 
+    </div>
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: vegabryam40@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0 - SNAPSHOT
+
+
+servers:
+  - url: http://localhost:8082
+    description: service
+  - url: http://localhost:8080
+    description: api-gateway
+
+tags:
+  - name: clients
+    description: Everything about clients
+
+paths:
+  /clients:
+    post:
+      tags:
+        - clients
+      summary: Create a new client
+      description: Create a new client with an Unique ID
+      operationId: createClient
+      parameters:
+        - name: x-cm-client-request-id
+          in: header
+          description: Unique ID for the request
+          required: true
+          schema:
+            type: string
+        - name: x-cm-client-user-agent
+          in: header
+          description: Type of device that consume the endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Created customer object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        '201':
+          description: succesfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: The server could not understand the request because of incorrect syntax
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /clients/{id}:
+    get:
+      tags:
+        - clients
+      summary: Get a client by ID
+      description: Retrieve a client using their unique ID.
+      operationId: getClientById
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: x-cm-client-request-id
+          in: header
+          description: Unique ID for the request
+          required: true
+          schema:
+            type: string
+        - name: x-cm-client-user-agent
+          in: header
+          description: Type of device that consume the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: The server could not understand the request because of incorrect syntax
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - clients
+      summary: Update an existing client
+      description: Update an existing client by their unique ID.
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: x-cm-client-request-id
+          in: header
+          description: Unique ID for the request
+          required: true
+          schema:
+            type: string
+        - name: x-cm-client-user-agent
+          in: header
+          description: Type of device that consume the endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated client object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - clients
+      summary: Delete a client
+      description: Delete a client by their unique ID.
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: x-cm-client-request-id
+          in: header
+          description: Unique ID for the request
+          required: true
+          schema:
+            type: string
+        - name: x-cm-client-user-agent
+          in: header
+          description: Type of device that consume the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful deletion with no content to return
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+components:
+  schemas:
+    ClientDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        identification:
+          type: string
+          maxLength: 13
+          pattern: "^[0-9]+$"
+        name:
+          type: string
+          pattern: "^[a-zA-Z\\s]+$"
+        age:
+          type: integer
+          format: int64
+        genre:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+        direction:
+          type: string
+        phone:
+          type: integer
+          maxLength: 10
+        password:
+          type: string
+        status:
+          type: integer
+          format: int64
+      required:
+        - identification
+        - name
+        - age
+        - genre
+        - phone
+        - password
+        - status
+    Error:
+      type: object
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+        status:
+          type: integer
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string
