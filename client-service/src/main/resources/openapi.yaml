@@ -36,19 +36,6 @@ paths:
       summary: Create a new client
       description: Create a new client with an Unique ID
       operationId: createClient
-      parameters:
-        - name: x-cm-client-request-id
-          in: header
-          description: Unique ID for the request
-          required: true
-          schema:
-            type: string
-        - name: x-cm-client-user-agent
-          in: header
-          description: Type of device that consume the endpoint
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Created customer object
         content:
@@ -83,18 +70,6 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: x-cm-client-request-id
-          in: header
-          description: Unique ID for the request
-          required: true
-          schema:
-            type: string
-        - name: x-cm-client-user-agent
-          in: header
-          description: Type of device that consume the endpoint
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
@@ -109,11 +84,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Client not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Client not found with no content to return
     put:
       tags:
         - clients
@@ -128,18 +99,6 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: x-cm-client-request-id
-          in: header
-          description: Unique ID for the request
-          required: true
-          schema:
-            type: string
-        - name: x-cm-client-user-agent
-          in: header
-          description: Type of device that consume the endpoint
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Updated client object
         content:
@@ -160,11 +119,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Client not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Client not found with no content to return
     delete:
       tags:
         - clients
@@ -179,28 +134,11 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: x-cm-client-request-id
-          in: header
-          description: Unique ID for the request
-          required: true
-          schema:
-            type: string
-        - name: x-cm-client-user-agent
-          in: header
-          description: Type of device that consume the endpoint
-          required: true
-          schema:
-            type: string
       responses:
         '204':
           description: Successful deletion with no content to return
         '404':
-          description: Client not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
+          description: Client not found with no content to return
 
 components:
   schemas:
@@ -228,7 +166,7 @@ components:
         direction:
           type: string
         phone:
-          type: integer
+          type: string
           maxLength: 10
         password:
           type: string
