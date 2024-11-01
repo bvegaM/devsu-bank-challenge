@@ -22,4 +22,12 @@ public class ClientService implements ClientIPort {
     public Client getById(Integer id) {
         return clientOPort.getById(id);
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        Client client = this.getById(id);
+        client.deactivateUser();
+
+        clientOPort.deleteById(client);
+    }
 }
