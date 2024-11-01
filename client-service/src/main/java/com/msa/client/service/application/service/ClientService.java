@@ -17,4 +17,9 @@ public class ClientService implements ClientIPort {
         client.encryptPassword();
         return clientOPort.save(client);
     }
+
+    @Override
+    public Client getById(Integer id) {
+        return clientOPort.getById(id);
+    }
 }

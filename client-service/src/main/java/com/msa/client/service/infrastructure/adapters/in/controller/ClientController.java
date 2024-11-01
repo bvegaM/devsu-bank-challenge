@@ -25,4 +25,10 @@ public class ClientController implements ClientsApi {
         return new ResponseEntity<>(clientDtoMapper
                 .toClientDto(client), HttpStatus.CREATED);
     }
+
+    @Override
+    public ResponseEntity<ClientDto> getClientById(Integer id) {
+        Client client = clientIPort.getById(id);
+        return new ResponseEntity<>(clientDtoMapper.toClientDto(client), HttpStatus.OK);
+    }
 }
