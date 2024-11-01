@@ -1,6 +1,25 @@
 spring:
   application:
     name: client-service
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://${HOST_CLIENT}:${PORT_CLIENT}/${DATABASE_CLIENT}
+    username: ${USERNAME_CLIENT}
+    password: ${PASSWORD_CLIENT}
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    hikari:
+      pool-name: SpringHikariCP
+      auto-commit: false
+      connection-timeout: 300
+      maximum-pool-size: 10
 
 server:
   port: 8081

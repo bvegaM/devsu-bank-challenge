@@ -13,17 +13,5 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  productDB:
-    image: postgres:13
-    container_name: product_db_container
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: productDB
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-    volumes:
-      - postgres_data:/var/lib/postgresql/data  # Monta un volumen para la persistencia de datos
-
 volumes:
   postgres_data:  # Define el volumen para almacenar los datos de PostgreSQL
