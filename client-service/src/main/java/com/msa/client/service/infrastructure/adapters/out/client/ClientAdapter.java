@@ -34,4 +34,9 @@ public class ClientAdapter implements ClientOPort {
     public void deleteById(Client client) {
         clientRepository.save(mapper.toClientEntity(client));
     }
+
+    @Override
+    public Client updateById(Client client) {
+        return this.save(client);
+    }
 }
