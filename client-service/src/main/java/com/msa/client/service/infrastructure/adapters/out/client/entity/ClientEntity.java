@@ -20,5 +20,5 @@ public class ClientEntity extends PersonEntity{
     private String password;
 
     @Column(name = "CLI_STATUS")
-    private String status;
+    private Integer status;
 }

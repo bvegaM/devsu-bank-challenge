@@ -19,7 +19,7 @@ info:
 
 
 servers:
-  - url: http://localhost:8082
+  - url: http://localhost:8081
     description: service
   - url: http://localhost:8080
     description: api-gateway
@@ -69,7 +69,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64
       responses:
         '200':
           description: Successful operation
@@ -98,7 +97,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64
       requestBody:
         description: Updated client object
         content:
@@ -133,7 +131,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int64
       responses:
         '204':
           description: Successful deletion with no content to return
@@ -147,7 +144,6 @@ components:
       properties:
         id:
           type: integer
-          format: int64
         identification:
           type: string
           maxLength: 13
@@ -157,7 +153,6 @@ components:
           pattern: "^[a-zA-Z\\s]+$"
         age:
           type: integer
-          format: int64
         genre:
           type: string
           enum:
@@ -172,7 +167,6 @@ components:
           type: string
         status:
           type: integer
-          format: int64
       required:
         - identification
         - name
