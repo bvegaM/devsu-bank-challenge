@@ -30,4 +30,11 @@ public class ClientService implements ClientIPort {
 
         clientOPort.deleteById(client);
     }
+
+    @Override
+    public Client updateById(Integer id, Client client) {
+        Client clientToUpdate = this.getById(id);
+        clientToUpdate.updateClient(client);
+        return clientOPort.updateById(clientToUpdate);
+    }
 }

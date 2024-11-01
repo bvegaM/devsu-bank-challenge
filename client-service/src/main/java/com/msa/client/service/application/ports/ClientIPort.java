@@ -9,4 +9,6 @@ public interface ClientIPort {
     Client getById(Integer id);
 
     void deleteById(Integer id);
+
+    Client updateById(Integer id, Client client);
 }
