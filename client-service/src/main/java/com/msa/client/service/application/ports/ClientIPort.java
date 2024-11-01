@@ -7,4 +7,6 @@ public interface ClientIPort {
     Client save(Client client);
 
     Client getById(Integer id);
+
+    void deleteById(Integer id);
 }

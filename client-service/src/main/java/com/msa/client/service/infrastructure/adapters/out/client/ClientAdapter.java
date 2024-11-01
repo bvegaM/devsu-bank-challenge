@@ -29,4 +29,9 @@ public class ClientAdapter implements ClientOPort {
         return client.map(mapper::toClient)
                 .orElseThrow(() -> new NotFoundServiceException("Cliente no encontrado"));
     }
+
+    @Override
+    public void deleteById(Client client) {
+        clientRepository.save(mapper.toClientEntity(client));
+    }
 }

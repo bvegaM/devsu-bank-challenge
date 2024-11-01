@@ -31,4 +31,10 @@ public class ClientController implements ClientsApi {
         Client client = clientIPort.getById(id);
         return new ResponseEntity<>(clientDtoMapper.toClientDto(client), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> deleteClient(Integer id) {
+        clientIPort.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
