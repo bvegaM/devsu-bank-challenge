@@ -22,4 +22,10 @@ public class MovementController implements MovementsApi {
         Movement movement = movementIPort.save(movementDtoMapper.toMovement(movementDto));
         return new ResponseEntity<>(movementDtoMapper.toMovementDto(movement), HttpStatus.CREATED);
     }
+
+    @Override
+    public ResponseEntity<MovementDto> movementsMovementIdGet(Integer movementId) {
+        Movement movement = movementIPort.getById(movementId);
+        return new ResponseEntity<>(movementDtoMapper.toMovementDto(movement), HttpStatus.OK);
+    }
 }
