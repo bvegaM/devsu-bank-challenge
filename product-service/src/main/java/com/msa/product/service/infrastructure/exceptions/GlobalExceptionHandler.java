@@ -2,6 +2,7 @@ package com.msa.product.service.infrastructure.exceptions;
 
 import com.msa.product.service.domain.exceptions.NotFoundServiceException;
 import com.msa.product.service.domain.exceptions.SQLExceptionEnum;
+import com.msa.product.service.domain.exceptions.TransactionServiceException;
 import com.msa.product.service.infrastructure.utils.Util;
 import com.msa.product.service.server.models.Error;
 import com.msa.product.service.server.models.ErrorDetail;
@@ -71,6 +72,15 @@ public class GlobalExceptionHandler {
         Error error = Util.createError("Type Mismatch Error", "There was a type mismatch in the request parameters",
                 List.of(errorDetail), HttpStatus.BAD_REQUEST);
 
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler({
+            TransactionServiceException.class
+    })
+    public ResponseEntity<Error> clientServiceException(TransactionServiceException exception){
+        Error error = Util.createError("Account Service Error", exception.getMessage(), List.of(),
+                HttpStatus.BAD_REQUEST);
         return ResponseEntity.badRequest().body(error);
     }
 }
