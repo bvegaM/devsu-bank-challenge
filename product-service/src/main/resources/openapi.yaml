@@ -214,10 +214,11 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
           description: Unique ID of the account
         accountNumber:
           type: string
+          pattern: "^[0-9]+$"
           description: Account number
         accountType:
           type: string
@@ -231,18 +232,21 @@ components:
           pattern: "^\\d+(\\.\\d{1,2})?$"
         status:
           type: integer
+        clientId:
+          type: integer
+          description: id of the person who owns the account
       required:
-        - id
         - accountNumber
         - accountType
         - initialBalance
         - status
+        - clientId
 
     MovementDto:
       type: object
       properties:
         id:
-          type: string
+          type: integer
           description: Unique ID of the movement
         accountId:
           type: string
@@ -266,10 +270,27 @@ components:
           description: Balance after the movement as a precise decimal
           pattern: "^\\d+(\\.\\d{1,2})?$"
       required:
-        - id
         - accountId
         - date
         - movementType
         - value
         - balance
         - status
+    Error:
+      type: object
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+        status:
+          type: integer
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string

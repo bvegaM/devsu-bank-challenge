@@ -15,8 +15,6 @@ public class Movement {
 
     private Integer number;
 
-    private String numberAccount;
-
     private LocalDateTime date;
 
     private MovementTypeEnum movementType;
@@ -24,4 +22,6 @@ public class Movement {
     private BigDecimal value;
 
     private BigDecimal balance;
+
+    private Integer accountId;
 }
