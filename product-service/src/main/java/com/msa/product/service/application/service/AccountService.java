@@ -34,6 +34,9 @@ public class AccountService implements GenericIPort<Account, Integer> {
 
     @Override
     public void deleteById(Integer id) {
+        Account account = this.getById(id);
+        account.deactivateAccount();
 
+        accountOPort.deleteById(account);
     }
 }

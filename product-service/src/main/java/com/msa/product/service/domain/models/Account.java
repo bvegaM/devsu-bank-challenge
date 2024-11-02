@@ -26,4 +26,8 @@ public class Account {
     private Integer clientId;
 
     private List<Movement> movements;
+
+    public void deactivateAccount(){
+        this.setStatus(0);
+    }
 }
