@@ -32,4 +32,9 @@ public class MovementService implements MovementIPort {
 
         return movementToSave;
     }
+
+    @Override
+    public Movement getById(Integer id) {
+        return movementOPort.getById(id);
+    }
 }

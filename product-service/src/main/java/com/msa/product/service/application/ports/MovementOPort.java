@@ -5,4 +5,6 @@ import com.msa.product.service.domain.models.Movement;
 public interface MovementOPort {
 
     Movement save(Movement movement);
+
+    Movement getById(Integer id);
 }

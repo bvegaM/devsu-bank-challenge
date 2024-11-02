@@ -3,14 +3,13 @@ package com.msa.product.service.infrastructure.adapters.out.movement.entity;
 import com.msa.product.service.domain.models.enums.MovementTypeEnum;
 import com.msa.product.service.infrastructure.adapters.out.account.entity.AccountEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

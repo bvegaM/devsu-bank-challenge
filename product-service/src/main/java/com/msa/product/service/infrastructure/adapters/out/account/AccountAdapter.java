@@ -3,12 +3,15 @@ package com.msa.product.service.infrastructure.adapters.out.account;
 import com.msa.product.service.application.ports.GenericOPort;
 import com.msa.product.service.domain.exceptions.NotFoundServiceException;
 import com.msa.product.service.domain.models.Account;
+import com.msa.product.service.domain.models.Movement;
 import com.msa.product.service.infrastructure.adapters.out.account.entity.AccountEntity;
 import com.msa.product.service.infrastructure.adapters.out.account.mapper.AccountEntityMapper;
 import com.msa.product.service.infrastructure.adapters.out.account.repository.AccountRepository;
+import com.msa.product.service.infrastructure.adapters.out.movement.entity.MovementEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -27,6 +30,7 @@ public class AccountAdapter implements GenericOPort<Account, Integer> {
     @Override
     public Account getById(Integer id) {
         Optional<AccountEntity> client = repository.findActiveAccountById(id);
+        List<MovementEntity> movements = client.get().getMovements();
         return client.map(mapper::toAccount)
                 .orElseThrow(() -> new NotFoundServiceException("Account not found"));
     }

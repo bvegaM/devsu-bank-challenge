@@ -4,15 +4,14 @@ package com.msa.product.service.infrastructure.adapters.out.account.entity;
 import com.msa.product.service.domain.models.enums.AccountTypeEnum;
 import com.msa.product.service.infrastructure.adapters.out.movement.entity.MovementEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
