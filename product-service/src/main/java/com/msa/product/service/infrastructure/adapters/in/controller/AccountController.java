@@ -22,4 +22,10 @@ public class AccountController implements AccountsApi {
         Account account = accountIPort.save(mapper.toAccount(accountDto));
         return new ResponseEntity<>(mapper.toAccountDto(account), HttpStatus.CREATED);
     }
+
+    @Override
+    public ResponseEntity<AccountDto> accountsAccountIdGet(Integer accountId) {
+        Account account = accountIPort.getById(accountId);
+        return new ResponseEntity<>(mapper.toAccountDto(account), HttpStatus.OK);
+    }
 }

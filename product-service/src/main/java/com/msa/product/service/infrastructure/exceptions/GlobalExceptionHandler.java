@@ -1,13 +1,16 @@
 package com.msa.product.service.infrastructure.exceptions;
 
+import com.msa.product.service.domain.exceptions.NotFoundServiceException;
 import com.msa.product.service.domain.exceptions.SQLExceptionEnum;
 import com.msa.product.service.infrastructure.utils.Util;
 import com.msa.product.service.server.models.Error;
+import com.msa.product.service.server.models.ErrorDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -44,4 +47,32 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler({
+            NotFoundServiceException.class
+    })
+    public ResponseEntity<Error> notFoundServiceException(NotFoundServiceException exception){
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler({
+            MethodArgumentTypeMismatchException.class
+    })
+    public ResponseEntity<Error> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        String parameterName = exception.getName();
+        Class<?> requiredType = exception.getRequiredType();
+        Object providedValue = exception.getValue();
+
+        String expectedTypeName = (requiredType != null) ? requiredType.getSimpleName() : "unknown type";
+        String message = String.format("Parameter '%s' expects a value of type '%s', but '%s' was provided",
+                parameterName, expectedTypeName, providedValue);
+
+        ErrorDetail errorDetail = Util.generateErrorDetail(message);
+        Error error = Util.createError("Type Mismatch Error", "There was a type mismatch in the request parameters",
+                List.of(errorDetail), HttpStatus.BAD_REQUEST);
+
+        return ResponseEntity.badRequest().body(error);
+    }
 }
+
+

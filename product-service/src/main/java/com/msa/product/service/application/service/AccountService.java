@@ -24,7 +24,7 @@ public class AccountService implements GenericIPort<Account, Integer> {
 
     @Override
     public Account getById(Integer id) {
-        return null;
+        return accountOPort.getById(id);
     }
 
     @Override
