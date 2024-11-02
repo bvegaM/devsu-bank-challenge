@@ -157,7 +157,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         '200':
           description: Movement details
@@ -165,46 +165,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MovementDto'
-        '404':
-          description: Movement not found
-    put:
-      tags:
-        - Movements
-      summary: Update an existing movement
-      parameters:
-        - name: movementId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MovementDto'
-      responses:
-        '200':
-          description: Movement updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MovementDto'
-        '404':
-          description: Movement not found
-    delete:
-      tags:
-        - Movements
-      summary: Delete a movement
-      parameters:
-        - name: movementId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Movement deleted successfully
         '404':
           description: Movement not found
 
@@ -249,11 +209,10 @@ components:
           type: integer
           description: Unique ID of the movement
         accountId:
-          type: string
+          type: integer
           description: Associated account ID
         date:
           type: string
-          format: date-time
           description: Date of the movement
         movementType:
           type: string
@@ -271,10 +230,8 @@ components:
           pattern: "^\\d+(\\.\\d{1,2})?$"
       required:
         - accountId
-        - date
         - movementType
         - value
-        - balance
         - status
     Error:
       type: object

@@ -10,10 +10,9 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Movement {
 
-    private Integer number;
+    private Integer id;
 
     private LocalDateTime date;
 
@@ -23,5 +22,5 @@ public class Movement {
 
     private BigDecimal balance;
 
-    private Integer accountId;
+    private Account account;
 }
