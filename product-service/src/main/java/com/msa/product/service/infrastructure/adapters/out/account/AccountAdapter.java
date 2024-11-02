@@ -38,6 +38,6 @@ public class AccountAdapter implements GenericOPort<Account, Integer> {
 
     @Override
     public void deleteById(Account body) {
-        //TODO
+        this.repository.save(mapper.toAccountEntity(body));
     }
 }

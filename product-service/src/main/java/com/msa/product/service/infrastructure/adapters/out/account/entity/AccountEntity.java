@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -39,6 +40,6 @@ public class AccountEntity {
     @Column(name = "CLIENT_ID", nullable = false)
     private Integer clientId;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MovementEntity> movements;
+    @OneToMany(mappedBy = "account", orphanRemoval = true)
+    private List<MovementEntity> movements = new ArrayList<>();
 }
