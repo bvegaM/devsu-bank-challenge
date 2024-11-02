@@ -33,7 +33,7 @@ public class AccountAdapter implements GenericOPort<Account, Integer> {
 
     @Override
     public Account updateById(Account newBody) {
-        return null;
+        return this.save(newBody);
     }
 
     @Override

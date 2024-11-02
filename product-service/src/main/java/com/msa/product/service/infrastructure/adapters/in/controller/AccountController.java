@@ -34,4 +34,10 @@ public class AccountController implements AccountsApi {
         accountIPort.deleteById(accountId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Override
+    public ResponseEntity<AccountDto> accountsAccountIdPut(Integer accountId, AccountDto accountDto) {
+        Account account = accountIPort.updateById(accountId, mapper.toAccount(accountDto));
+        return new ResponseEntity<>(mapper.toAccountDto(account), HttpStatus.OK);
+    }
 }
