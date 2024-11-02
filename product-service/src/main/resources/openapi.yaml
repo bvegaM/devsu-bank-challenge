@@ -1,0 +1,275 @@
+openapi: 3.0.3
+info:
+  title: Swagger Account and Movement - OpenAPI 3.0
+  description: |-
+    <div style="text-align: justify;">
+      <h3>Client and Person Management</h3>
+    
+      <img src="https://workablehr.s3.amazonaws.com/uploads/account/logo/518042/logo" alt="Image" align="right" width="400"/>
+    
+      <p>This is a contract to manage account and movements data based on the OpenAPI 3.0 specification.This is a contract that uses the API First-Contract principle to standardize the creation of endpoints to be used in our service and improve the development of our APIs.</p> 
+    </div>
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: vegabryam40@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0 - SNAPSHOT
+
+servers:
+  - url: http://localhost:8082
+    description: service
+  - url: http://localhost:8080
+    description: api-gateway
+
+tags:
+  - name: Accounts
+    description: Operations on accounts
+  - name: Movements
+    description: Operations on account movements
+
+paths:
+  /accounts:
+    post:
+      tags:
+        - Accounts
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '400':
+          description: Invalid input data
+
+  /accounts/{accountId}:
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve an account by ID
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Account not found
+    put:
+      tags:
+        - Accounts
+      summary: Update an existing account
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '200':
+          description: Account updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Account not found
+    delete:
+      tags:
+        - Accounts
+      summary: Delete an account
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Account deleted successfully
+        '404':
+          description: Account not found
+
+  /movements:
+    post:
+      tags:
+        - Movements
+      summary: Record a new movement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovementDto'
+      responses:
+        '201':
+          description: Movement recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovementDto'
+        '400':
+          description: Invalid input data
+
+    get:
+      tags:
+        - Movements
+      summary: List all movements
+      responses:
+        '200':
+          description: List of movements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovementDto'
+
+  /movements/{movementId}:
+    get:
+      tags:
+        - Movements
+      summary: Retrieve a movement by ID
+      parameters:
+        - name: movementId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Movement details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovementDto'
+        '404':
+          description: Movement not found
+    put:
+      tags:
+        - Movements
+      summary: Update an existing movement
+      parameters:
+        - name: movementId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovementDto'
+      responses:
+        '200':
+          description: Movement updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovementDto'
+        '404':
+          description: Movement not found
+    delete:
+      tags:
+        - Movements
+      summary: Delete a movement
+      parameters:
+        - name: movementId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Movement deleted successfully
+        '404':
+          description: Movement not found
+
+components:
+  schemas:
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the account
+        accountNumber:
+          type: string
+          description: Account number
+        accountType:
+          type: string
+          description: Type of account
+          enum:
+            - Savings
+            - Checking
+        initialBalance:
+          type: string
+          description: Initial balance as a precise decimal
+          pattern: "^\\d+(\\.\\d{1,2})?$"
+        status:
+          type: integer
+      required:
+        - id
+        - accountNumber
+        - accountType
+        - initialBalance
+        - status
+
+    MovementDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the movement
+        accountId:
+          type: string
+          description: Associated account ID
+        date:
+          type: string
+          format: date-time
+          description: Date of the movement
+        movementType:
+          type: string
+          description: Type of movement
+          enum:
+            - Deposit
+            - Withdrawal
+        value:
+          type: string
+          description: Value of the movement as a precise decimal
+          pattern: "^-?\\d+(\\.\\d{1,2})?$"
+        balance:
+          type: string
+          description: Balance after the movement as a precise decimal
+          pattern: "^\\d+(\\.\\d{1,2})?$"
+      required:
+        - id
+        - accountId
+        - date
+        - movementType
+        - value
+        - balance
+        - status
