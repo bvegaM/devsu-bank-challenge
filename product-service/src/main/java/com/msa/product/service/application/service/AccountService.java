@@ -29,7 +29,10 @@ public class AccountService implements GenericIPort<Account, Integer> {
 
     @Override
     public Account updateById(Integer id, Account newBody) {
-        return null;
+        Account account = this.getById(id);
+        clientOPort.getById(newBody.getClientId());
+        account.updateAccount(newBody);
+        return accountOPort.updateById(account);
     }
 
     @Override
