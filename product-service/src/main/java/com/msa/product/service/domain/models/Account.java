@@ -23,7 +23,7 @@ public class Account {
 
     private Integer status;
 
-    private Integer userId;
+    private Integer clientId;
 
     private List<Movement> movements;
 }
