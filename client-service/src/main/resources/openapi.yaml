@@ -136,6 +136,47 @@ paths:
           description: Successful deletion with no content to return
         '404':
           description: Client not found with no content to return
+  /clients/{id}/report:
+    get:
+      tags:
+        - clients
+      summary: Generate a report for a client
+      description: Generate a report for a client by ID and date range
+      operationId: generateClientReport
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+        - name: fromDate
+          in: query
+          required: true
+          description: Date start for movements
+          schema:
+            type: string
+            example: "2024-11-01"
+            pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        - name: toDate
+          in: query
+          description: Date end for movements
+          required: true
+          schema:
+            type: string
+            example: "2024-11-30"
+            pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+      responses:
+        '204':
+          description: Report generated successfully with no body
+        '400':
+          description: Invalid date format or missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found with no body
 
 components:
   schemas:

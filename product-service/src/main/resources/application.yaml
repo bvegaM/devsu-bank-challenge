@@ -20,6 +20,14 @@ spring:
       auto-commit: false
       connection-timeout: 300
       maximum-pool-size: 10
+  kafka:
+    topic:
+      name: reports
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: group-product
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 server:
   port: 8082

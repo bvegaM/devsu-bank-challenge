@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Account {
 
     private Integer id;

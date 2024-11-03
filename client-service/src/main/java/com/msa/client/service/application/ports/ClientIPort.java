@@ -11,4 +11,6 @@ public interface ClientIPort {
     void deleteById(Integer id);
 
     Client updateById(Integer id, Client client);
+
+    void generateReport(Integer id, String fromDate, String toDate);
 }

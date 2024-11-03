@@ -43,4 +43,11 @@ public class ClientController implements ClientsApi {
         Client client = clientIPort.updateById(id, clientDtoMapper.toClient(clientDto));
         return new ResponseEntity<>(clientDtoMapper.toClientDto(client), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> generateClientReport(Integer id, String fromDate, String toDate){
+        clientIPort.generateReport(id, fromDate, toDate);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
