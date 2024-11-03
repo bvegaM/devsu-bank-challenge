@@ -15,6 +15,7 @@ import com.msa.product.service.infrastructure.adapters.out.movement.repository.M
 import com.msa.product.service.infrastructure.utils.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,9 @@ public class MovementAdapter implements MovementOPort {
     private final MovementEntityMapper mapper;
     private final ReportEntityMapper reportEntityMapper;
     private final ObjectMapper objectMapper;
+
+    @Value("${report.path}")
+    private String reportPath;
 
     @Override
     public Movement save(Movement movement) {
@@ -59,8 +63,8 @@ public class MovementAdapter implements MovementOPort {
     public void sendReport(ReportRequest request, List<Report> reports) {
         try{
 
-            String builderPath = new StringBuilder().append("product-service/src/main/resources/static/")
-                    .append(request.getClientName().replace(" ",""))
+            String builderPath = new StringBuilder().append(reportPath)
+                    .append("/").append(request.getClientName().replace(" ",""))
                     .append(".json").toString();
 
             Util.saveJsonToFile(objectMapper.writeValueAsString(reports), builderPath);

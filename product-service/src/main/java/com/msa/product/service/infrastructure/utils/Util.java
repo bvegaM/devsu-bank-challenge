@@ -10,6 +10,7 @@ import org.springframework.validation.ObjectError;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -58,10 +59,19 @@ public class Util {
 
     public static void saveJsonToFile(String jsonContent, String filePath) {
         try {
-            log.info("generaterReport in static directory");
-            Files.write(Paths.get(filePath), jsonContent.getBytes());
+            Path path = Paths.get(filePath);
+            Path parentDir = path.getParent();
+
+            if (parentDir != null && !Files.exists(parentDir)) {
+                Files.createDirectories(parentDir);
+                log.info("Directory created at: " + parentDir.toString());
+            }
+
+            Files.write(path, jsonContent.getBytes());
+            log.info("Report generated successfully at: " + filePath);
         } catch (IOException e) {
-            log.error("Problem generatin json report file");
+            e.printStackTrace();
+            log.error("Problem generating JSON report file", e);
         }
     }
 }
