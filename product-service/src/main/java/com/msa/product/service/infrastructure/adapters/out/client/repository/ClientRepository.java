@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "client-service", url = "http://localhost:8081/clients")
+@FeignClient(name = "client-service")
 public interface ClientRepository {
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "clients/{id}")
     ResponseEntity<ClientEntity> getById(@PathVariable("id") Integer id);
 }

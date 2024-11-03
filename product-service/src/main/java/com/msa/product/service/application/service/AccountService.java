@@ -30,7 +30,7 @@ public class AccountService implements GenericIPort<Account, Integer> {
     @Override
     public Account updateById(Integer id, Account newBody) {
         Account account = this.getById(id);
-        if (account.getId().intValue() != id.intValue()){
+        if (account.getClientId().intValue() != newBody.getClientId()){
             clientOPort.getById(newBody.getClientId());
         }
         account.updateAccount(newBody);
