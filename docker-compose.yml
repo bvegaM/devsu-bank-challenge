@@ -15,6 +15,7 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     volumes:
+      - ./sql/client.sql:/docker-entrypoint-initdb.d/schema.sql
       - clientdb_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "myuser"]
@@ -33,6 +34,7 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     volumes:
+      - ./sql/product.sql:/docker-entrypoint-initdb.d/schema.sql
       - productdb_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "myuser"]
