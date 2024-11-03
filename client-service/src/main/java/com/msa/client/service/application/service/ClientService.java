@@ -3,6 +3,7 @@ package com.msa.client.service.application.service;
 import com.msa.client.service.application.ports.ClientIPort;
 import com.msa.client.service.application.ports.ClientOPort;
 import com.msa.client.service.domain.models.Client;
+import com.msa.client.service.domain.utils.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,13 @@ public class ClientService implements ClientIPort {
         Client clientToUpdate = this.getById(id);
         clientToUpdate.updateClient(client);
         return clientOPort.updateById(clientToUpdate);
+    }
+
+    @Override
+    public void generateReport(Integer id, String fromDate, String toDate){
+        Client client = clientOPort.getById(id);
+        if(Util.validateDateRange(fromDate, toDate)){
+            clientOPort.generateReport(client, fromDate, toDate);
+        }
     }
 }

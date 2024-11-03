@@ -3,6 +3,7 @@ package com.msa.client.service.infrastructure.utils;
 import com.msa.client.service.domain.exceptions.ValidationExceptionEnum;
 import com.msa.client.service.server.models.Error;
 import com.msa.client.service.server.models.ErrorDetail;
+import jakarta.validation.ConstraintViolation;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -23,6 +24,17 @@ public class Util {
         }
 
         String message = formatErrorMessage(attributeName, error.getDefaultMessage());
+        errorDetail.message(message);
+
+        return errorDetail;
+    }
+
+    public static ErrorDetail generateErrorDetail(ConstraintViolation<?> violation) {
+        ErrorDetail errorDetail = new ErrorDetail();
+
+        String attributeName = violation.getPropertyPath().toString();
+
+        String message = formatErrorMessage(attributeName, violation.getMessage());
         errorDetail.message(message);
 
         return errorDetail;

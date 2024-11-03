@@ -3,12 +3,13 @@ package com.msa.product.service.application.service;
 import com.msa.product.service.application.ports.GenericIPort;
 import com.msa.product.service.application.ports.MovementIPort;
 import com.msa.product.service.application.ports.MovementOPort;
-import com.msa.product.service.domain.models.Account;
-import com.msa.product.service.domain.models.Movement;
+import com.msa.product.service.domain.models.*;
 import com.msa.product.service.domain.models.strategy.MovementStrategyProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +37,11 @@ public class MovementService implements MovementIPort {
     @Override
     public Movement getById(Integer id) {
         return movementOPort.getById(id);
+    }
+
+    @Override
+    public void generateReport(ReportRequest request) {
+        List<Report> reports = movementOPort.generateReport(request);
+        movementOPort.sendReport(request, reports);
     }
 }

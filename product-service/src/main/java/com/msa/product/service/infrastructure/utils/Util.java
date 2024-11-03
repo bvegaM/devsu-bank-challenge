@@ -3,12 +3,17 @@ package com.msa.product.service.infrastructure.utils;
 import com.msa.product.service.domain.exceptions.ValidationExceptionEnum;
 import com.msa.product.service.server.models.Error;
 import com.msa.product.service.server.models.ErrorDetail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
+@Slf4j
 public class Util {
 
     private Util() {
@@ -51,4 +56,12 @@ public class Util {
         return error;
     }
 
+    public static void saveJsonToFile(String jsonContent, String filePath) {
+        try {
+            log.info("generaterReport in static directory");
+            Files.write(Paths.get(filePath), jsonContent.getBytes());
+        } catch (IOException e) {
+            log.error("Problem generatin json report file");
+        }
+    }
 }

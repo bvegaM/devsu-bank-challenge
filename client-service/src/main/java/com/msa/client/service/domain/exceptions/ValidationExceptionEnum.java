@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ValidationExceptionEnum {
 
     NUMBER_VALIDATION("must match \"^[0-9]+$\"","This field only must be contain numbers"),
-    TEXT_VALIDATION("must match \"^[a-zA-Z\\s]+$\"","This field only must be contain letters");
+    TEXT_VALIDATION("must match \"^[a-zA-Z\\s]+$\"","This field only must be contain letters"),
+    DATE_VALIDATION("must match \"^\\d{4}-\\d{2}-\\d{2}$\"", "This field must be in format yyyy-MM-dd");
 
     private String pattern;
     private String description;

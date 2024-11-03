@@ -6,6 +6,7 @@ import com.msa.client.service.domain.exceptions.SQLExceptionEnum;
 import com.msa.client.service.infrastructure.utils.Util;
 import com.msa.client.service.server.models.Error;
 import com.msa.client.service.server.models.ErrorDetail;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,6 +39,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Error> methodArgumentNotValidException(MethodArgumentNotValidException exception){
         var violations = exception.getBindingResult()
                 .getAllErrors()
+                .stream()
+                .map(Util::generateErrorDetail)
+                .toList();
+
+        Error error = Util.createError("Violation Error",
+                "The following conditions in the parameters were violated", violations,
+                HttpStatus.BAD_REQUEST);
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler({
+            ConstraintViolationException.class
+    })
+    public ResponseEntity<Error> constraintViolationException(ConstraintViolationException exception){
+        var violations = exception.getConstraintViolations()
                 .stream()
                 .map(Util::generateErrorDetail)
                 .toList();

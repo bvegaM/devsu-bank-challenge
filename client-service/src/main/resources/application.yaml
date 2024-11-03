@@ -20,6 +20,13 @@ spring:
       auto-commit: false
       connection-timeout: 300
       maximum-pool-size: 10
+  kafka:
+    topic:
+      name: reports
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 server:
   port: 8081
