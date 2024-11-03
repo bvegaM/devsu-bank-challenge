@@ -1,0 +1,160 @@
+version: '3.8'
+
+networks:
+  app-network:  # Definimos una red para la aplicación
+    driver: bridge
+
+services:
+  client-database:
+    image: postgres:13
+    container_name: client_db_container
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: clientDB
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - ./sql/client.sql:/docker-entrypoint-initdb.d/schema.sql
+      - clientdb_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "myuser"]
+      interval: 10s
+      retries: 5
+    networks:
+      - app-network
+
+  product-database:
+    image: postgres:13
+    container_name: product_db_container
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_DB: productDB
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - ./sql/product.sql:/docker-entrypoint-initdb.d/schema.sql
+      - productdb_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "myuser"]
+      interval: 10s
+      retries: 5
+    networks:
+      - app-network
+
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - app-network
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "reports:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9092" ]
+      interval: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  eureka-server:
+    image: eureka-server:latest
+    container_name: eureka_server_container
+    depends_on:
+      kafka:
+        condition: service_healthy
+      client-database:
+        condition: service_healthy
+      product-database:
+        condition: service_healthy
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_INSTANCE_HOSTNAME: eureka-server
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
+      interval: 10s
+      retries: 5
+    networks:
+      - app-network
+
+  client-service:
+    image: client-service:latest
+    container_name: client_service_container
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      client-database:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://client-database:5432/clientDB
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+      KAFKA_HOST: kafka:9092
+    networks:
+      - app-network
+
+  product-service:
+    image: product-service:latest
+    container_name: product_service_container
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      product-database:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      REPORT_PATH: /var/reports
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-database:5432/productDB
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+      KAFKA_HOST: kafka:9092
+    volumes:
+      - ./product_data:/app/data
+    networks:
+      - app-network
+
+  api-gateway:
+    image: api-gateway:latest
+    container_name: api_gateway_container
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      client-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    networks:
+      - app-network
+
+volumes:
+  clientdb_data:
+  productdb_data:

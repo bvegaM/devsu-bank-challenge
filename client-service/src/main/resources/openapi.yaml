@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: Swagger Client - OpenAPI 3.0
+  description: |-
+    <div style="text-align: justify;">
+      <h3>Client and Person Management</h3>
+    
+      <img src="https://workablehr.s3.amazonaws.com/uploads/account/logo/518042/logo" alt="Image" align="right" width="400"/>
+    
+      <p>This is a contract to manage client data based on the OpenAPI 3.0 specification.This is a contract that uses the API First-Contract principle to standardize the creation of endpoints to be used in our service and improve the development of our APIs.</p> 
+    </div>
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: vegabryam40@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0 - SNAPSHOT
+
+
+servers:
+  - url: http://localhost:8081
+    description: service
+  - url: http://localhost:8080
+    description: api-gateway
+
+tags:
+  - name: clients
+    description: Everything about clients
+
+paths:
+  /clients:
+    post:
+      tags:
+        - clients
+      summary: Create a new client
+      description: Create a new client with an Unique ID
+      operationId: createClient
+      requestBody:
+        description: Created customer object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        '201':
+          description: succesfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: The server could not understand the request because of incorrect syntax
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /clients/{id}:
+    get:
+      tags:
+        - clients
+      summary: Get a client by ID
+      description: Retrieve a client using their unique ID.
+      operationId: getClientById
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: The server could not understand the request because of incorrect syntax
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found with no content to return
+    put:
+      tags:
+        - clients
+      summary: Update an existing client
+      description: Update an existing client by their unique ID.
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated client object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientDto'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found with no content to return
+    delete:
+      tags:
+        - clients
+      summary: Delete a client
+      description: Delete a client by their unique ID.
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Successful deletion with no content to return
+        '404':
+          description: Client not found with no content to return
+  /clients/{id}/report:
+    get:
+      tags:
+        - clients
+      summary: Generate a report for a client
+      description: Generate a report for a client by ID and date range
+      operationId: generateClientReport
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the client
+          required: true
+          schema:
+            type: integer
+        - name: fromDate
+          in: query
+          required: true
+          description: Date start for movements
+          schema:
+            type: string
+            example: "2024-11-01"
+            pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        - name: toDate
+          in: query
+          description: Date end for movements
+          required: true
+          schema:
+            type: string
+            example: "2024-11-30"
+            pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+      responses:
+        '204':
+          description: Report generated successfully with no body
+        '400':
+          description: Invalid date format or missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found with no body
+
+components:
+  schemas:
+    ClientDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        identification:
+          type: string
+          maxLength: 13
+          pattern: "^[0-9]+$"
+        name:
+          type: string
+          pattern: "^[a-zA-Z\\s]+$"
+        age:
+          type: integer
+        genre:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+        direction:
+          type: string
+        phone:
+          type: string
+          maxLength: 10
+        password:
+          type: string
+        status:
+          type: integer
+      required:
+        - identification
+        - name
+        - age
+        - genre
+        - phone
+        - password
+        - status
+    Error:
+      type: object
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+        status:
+          type: integer
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string
